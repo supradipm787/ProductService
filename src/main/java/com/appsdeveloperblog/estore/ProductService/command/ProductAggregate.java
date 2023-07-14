@@ -6,7 +6,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
@@ -44,7 +44,7 @@ public class ProductAggregate {
 		//copy the properties of source object  createProductCommand to destination object productCreatedEvent
 		BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
 		
-		//apply method of AggregateLifecycle will publish the event to all the event handlers
+		//apply method of AggregateLifecycle will publish the event to event store for all the event handlers
 		AggregateLifecycle.apply(productCreatedEvent) ;
 	}
 	
