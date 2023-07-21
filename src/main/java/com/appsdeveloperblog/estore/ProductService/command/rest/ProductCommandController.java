@@ -61,12 +61,13 @@ public class ProductCommandController {
 		log.info("Title in RequestBody in ProductCommandController  : "  + createProductRestModel.getTitle() );
 				
 		String returnValueFromCommand ;
+		returnValueFromCommand = commandgateway.sendAndWait(createProductCommand);
 		
-		try {
+		/*try {
 			returnValueFromCommand = commandgateway.sendAndWait(createProductCommand);
 		}catch (Exception e) {
 			returnValueFromCommand = e.getLocalizedMessage();
-		}
+		}*/
 		
 		//RequestBody annotation converts the request body content of ProductRestModel to object of ProductRestModel and inject to createProduct method
 		//return MethodConstants.postHandled + productRestModel.getTitle();		

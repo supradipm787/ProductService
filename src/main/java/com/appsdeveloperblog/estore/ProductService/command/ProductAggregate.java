@@ -44,8 +44,10 @@ public class ProductAggregate {
 		//copy the properties of source object  createProductCommand to destination object productCreatedEvent
 		BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
 		
-		//apply method of AggregateLifecycle will publish the event to event store for all the event handlers
+		//apply method of AggregateLifecycle will stage to publish the event to event store for all the event handlers		
 		AggregateLifecycle.apply(productCreatedEvent) ;
+		
+		
 	}
 	
 	/* This method will be first called once apply method of AggregateLifecycle is called  

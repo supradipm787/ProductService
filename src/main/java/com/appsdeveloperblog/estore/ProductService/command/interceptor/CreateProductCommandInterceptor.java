@@ -12,19 +12,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.appsdeveloperblog.estore.ProductService.command.CreateProductCommand;
+import com.appsdeveloperblog.estore.ProductService.core.data.ProductLookupRepository;
+import com.appsdeveloperblog.estore.ProductService.core.data.ProductLookupEntity;
 
 @Component
 public class CreateProductCommandInterceptor implements MessageDispatchInterceptor <CommandMessage <?>>{
 
 	private static final Logger log = LoggerFactory.getLogger(CreateProductCommandInterceptor.class);
+	private final ProductLookupRepository productLookupRepository;
+	
+	public CreateProductCommandInterceptor (ProductLookupRepository productLookupRepository) {
+		this.productLookupRepository = productLookupRepository;
+	}
 	
 	
 	/*handle method returns a function 'BiFunction' which accepts Integer and CommandMessage 
 	and return CommandMessage (last argument*/
 	@Override
 	public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(
-			List<? extends CommandMessage<?>> messages) {
-		
+			List<? extends CommandMessage<?>> messages) {		
 		
 		return (index, command) ->{
 			
@@ -34,13 +40,19 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
 				
 				CreateProductCommand createProductCommand = (CreateProductCommand) command.getPayload();
 				
-				if(createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+				/** if(createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
 					throw new IllegalArgumentException ("Price Cannot be empty") ;
 					
 				}
 				if (createProductCommand.getTitle() == null || createProductCommand.getTitle().isBlank()) {
 					throw new IllegalArgumentException ("Title Cannot be empty") ;
+				} **/
+				
+				ProductLookupEntity productLookupEntity = productLookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle());
+				if (productLookupEntity != null) {
+					throw new IllegalStateException ("The Product with same Product id & Product title esists" + String.format(createProductCommand.getProductId() + ":" + createProductCommand.getTitle(), createProductCommand.getTitle()));
 				}
+				
 			}
 			
 			return command;
