@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.appsdeveloperblog.estore.ProductService.command.CreateProductCommand;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductLookupRepository;
+import com.appsdeveloperblog.estore.ProductService.utils.ErrorConstants;
 import com.appsdeveloperblog.estore.ProductService.core.data.ProductLookupEntity;
 
 @Component
@@ -50,7 +51,7 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
 				
 				ProductLookupEntity productLookupEntity = productLookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle());
 				if (productLookupEntity != null) {
-					throw new IllegalStateException ("The Product with same Product id & Product title esists" + String.format(createProductCommand.getProductId() + ":" + createProductCommand.getTitle(), createProductCommand.getTitle()));
+					throw new IllegalStateException (ErrorConstants.sameProduct + String.format(createProductCommand.getProductId() + ErrorConstants.stringSeparator + createProductCommand.getTitle(), createProductCommand.getTitle()));
 				}
 				
 			}
